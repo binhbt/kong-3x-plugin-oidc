@@ -1,0 +1,64 @@
+version: "3.9"
+
+services:
+  kong-database:
+    image: postgres:13
+    container_name: kong-database
+    restart: always
+    environment:
+      POSTGRES_USER: kong
+      POSTGRES_DB: kong
+      POSTGRES_PASSWORD: kong
+    volumes:
+      - kong-db-data:/var/lib/postgresql/data
+    networks:
+      - my-network
+  kong-migrations:
+    image: kong:3.9-oidc 
+    depends_on:
+      - kong-database
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: kong-database
+      KONG_PG_USER: kong
+      KONG_PG_PASSWORD: kong
+    command: kong migrations bootstrap
+    networks:
+      - my-network
+
+  kong:
+    image: kong:3.9-oidc 
+    container_name: kong
+    restart: always
+    depends_on:
+      - kong-database
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: kong-database
+      KONG_PG_USER: kong
+      KONG_PG_PASSWORD: kong
+      # KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      # KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001"
+      KONG_ADMIN_GUI_URL: http://localhost:8002
+      KONG_PORTAL: "on"
+      KONG_ADMIN_GUI: "on"
+      KONG_NGINX_HTTP_LUA_SHARED_DICT: "oidc_introspect_cache 50m"
+      KONG_LOG_LEVEL: debug
+      KONG_PROXY_ERROR_LOG : /usr/local/kong/logs/error.log
+      KONG_ADMIN_ERROR_LOG : /usr/local/kong/logs/error.log
+    ports:
+      - "8000:8000"   # Proxy
+      - "8443:8443"   # Proxy SSL
+      - "8001:8001"   # Admin API
+      - "8002:8002"   # Kong Manager UI
+      - "8444:8444"   # Admin API SSL
+    networks:
+      - my-network
+volumes:
+  kong-db-data:
+
+
+networks:
+  my-network:
+    driver: bridge

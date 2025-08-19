@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  kong:
+    build: .
+    container_name: kong
+    image: kong:3.9-oidc  # <-- Đặt tên image tùy chỉnh
+    ports:
+      - "8000:8000"   # Proxy
+      - "8001:8001"   # Admin API
+      - "8002:8002"   # Proxy SSL
+      - "8003:8003"   # Admin SSL
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: "/kong/kong.yml"  # Optional nếu dùng file config
+      KONG_LOG_LEVEL: debug
+      KONG_PLUGINS: "bundled,token-introspection"
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+    volumes:
+      - ./kong.yml:/kong/kong.yml

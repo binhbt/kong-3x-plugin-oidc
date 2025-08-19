@@ -1,0 +1,149 @@
+register
+curl -X POST http://localhost/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "test",
+    "password": "123456",
+    "email": "test@example.com"
+}'
+=====================
+login
+curl -X POST http://localhost/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "test",
+    "password": "123456"
+}'
+curl -X POST http://localhost:8080/realms/demo/protocol/openid-connect/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "client_id=spring-boot-app" \
+  -d "client_secret=2TNrpt68Go7GftGm1doWJBLCNcNZbMlk" \
+  -d "grant_type=password" \
+  -d "username=your-username" \
+  -d "password=your-password"
+
+======logout====
+curl -i POST http://localhost:8080/realms/demo/protocol/openid-connect/logout \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "client_id=spring-boot-app" \
+  -d "client_secret=bRld7XkEIVKf4cQgXtgjejl4zCa8jc3B" \
+  -d "refresh_token=eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI2ZDAyNTJkMC1lNzNiLTQwMTItOWIzNy01Njc1ODI5YThhZjgifQ.eyJleHAiOjE3NTU0MDYxNTgsImlhdCI6MTc1NTI5ODE1OCwianRpIjoiYTZlYTQ0ZDEtOGY0Yy00Mjc2LWJkNzItNTEzNTE3YzJkMzEwIiwiaXNzIjoiaHR0cDovLzE5Mi4xNjguMS42OjgwODAvcmVhbG1zL2RlbW8iLCJhdWQiOiJodHRwOi8vMTkyLjE2OC4xLjY6ODA4MC9yZWFsbXMvZGVtbyIsInN1YiI6IjlkYTI5YzdmLTU3MWMtNGQ5NS04MmUzLTAwMGFmODEwYTJkNSIsInR5cCI6IlJlZnJlc2giLCJhenAiOiJzcHJpbmctYm9vdC1hcHAiLCJzZXNzaW9uX3N0YXRlIjoiOWEwNzY0ODQtZGE0NC00MjIyLTkwNDktNDlhN2QyMzFjZTBhIiwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwic2lkIjoiOWEwNzY0ODQtZGE0NC00MjIyLTkwNDktNDlhN2QyMzFjZTBhIn0.K6CSo3OYrjkg8AgJZVw2hboDLCWjvaCAXLzxXWhfcwi2AP8LUyKqgjBu6_nNTPnWHtoKPC-Uk6cuhMDy67b2aA"
+
+===Introspect====-
+curl -X POST http://localhost:8080/realms/demo/protocol/openid-connect/token/introspect \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -u "spring-boot-app:2TNrpt68Go7GftGm1doWJBLCNcNZbMlk" \
+  -d "token=eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJNZEhPMHF4VlppMkEtZ01qN1hMcloyOTZNOE0wOURxRHl5eXZEaUU0Z3A0In0.eyJleHAiOjE3NTUyODM0NTUsImlhdCI6MTc1NTI2NTQ1NSwianRpIjoiNzA5YzdhOWMtMWJmMC00YzBkLWEzMGItNjViOWE1MWM2ZTkwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3JlYWxtcy9kZW1vIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjlkYTI5YzdmLTU3MWMtNGQ5NS04MmUzLTAwMGFmODEwYTJkNSIsInR5cCI6IkJlYXJlciIsImF6cCI6InNwcmluZy1ib290LWFwcCIsInNlc3Npb25fc3RhdGUiOiJlNTZlZTc0MC02OTc5LTRjYjktOTA0ZS1kNWZhYjU4NTRmMDAiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJkZWZhdWx0LXJvbGVzLWRlbW8iLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsInNpZCI6ImU1NmVlNzQwLTY5NzktNGNiOS05MDRlLWQ1ZmFiNTg1NGYwMCIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYW1lIjoiYSBhIiwicHJlZmVycmVkX3VzZXJuYW1lIjoidGVzdCIsImdpdmVuX25hbWUiOiJhIiwiZmFtaWx5X25hbWUiOiJhIiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIn0.fgB1fM2mHAplOXopPdo0WA-MLC7pGta-rm8c7n8euxg_yOhQLCyizhMwXusEUeaGjCU8WPVRUa99OtcKocDeldZs1rXvgoWBrE7gLfcfPRiTRGcVemSXbQOjT30eeFQNzhARWeF4RqXkBPehk2QdCEHOYuEQ_ZUo7tMSpss-negM9P8kvniJVPPt3MhEoGcVACxTU82sBggRkmUMg_ifFIuxyLGtwHQI4MMfMyYWmi6NZpEMsJwc_zN29N6QCB9a9jTrN9fuK4Tx9CODVEdQBH_4biow8_W57SbAHxHJRcUuiO9yd7Epb5pvpmBCY6A5QKolGgHUqSV6uO2AP6vAbg"
+
+
+
+curl -i http://localhost/public/hello
+curl -i http://localhost/private/hello
+curl -i GET http://localhost/private/hello \
+  -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJEMGJ6UEViUGZjZnYzVUFzMnREeGl0VjB4M0hUZDQzZUVRcFBkVFVPS19nIn0.eyJleHAiOjE3NTUyMDczNTksImlhdCI6MTc1NTE3ODU1OSwianRpIjoiYjAzOWI3MTktZGI1OC00Mzg1LTlhNjktNzY3ZWY5Yjc2YzU2IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3JlYWxtcy9kZW1vIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjYxMzBkZWUyLWMwY2UtNGRlNy1hYTMwLWJjYjg1MmMyYjAxZiIsInR5cCI6IkJlYXJlciIsImF6cCI6InNwcmluZy1ib290LWFwcCIsInNlc3Npb25fc3RhdGUiOiI0NTA2OWM2ZS1hZDdmLTQxYjctYmRmYi1iZGRmZmM0NGJlOTQiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHA6Ly9sb2NhbGhvc3Q6ODAiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iLCJkZWZhdWx0LXJvbGVzLWRlbW8iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJzaWQiOiI0NTA2OWM2ZS1hZDdmLTQxYjctYmRmYi1iZGRmZmM0NGJlOTQiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6ImEgYSIsInByZWZlcnJlZF91c2VybmFtZSI6InRlc3QiLCJnaXZlbl9uYW1lIjoiYSIsImZhbWlseV9uYW1lIjoiYSIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSJ9.Vvw8jl2nYWqVfvdKxrVdqQ-rOT2lT2H_5gqVy4yK_SA-wdAo6qyeXa1rdAH7y_Z214BQ-lDkTPVU_MEC2jOa04hT5ODqKZD-34w4OEQmAI1d1BuMeVA9QewjdznVmAXXqoKCwv3DLoKEaFZf2LNzLC7R8rOr6Y_q4BXwysiDyw3Sq465oNHC1MUmbwqpZkq9Bb7eGHRl2juAQNIaV_J-ngrFCkT57dOOu5m3No6QLBosjIfneqi285p0VuxwwJrC0SmvY1Z1k12uSZJYiUkd_z1YHhtIRu0dZkKRhjjbcesVNQbabNZBeNV0SNwx9obNMs-VE2yluvL9rjQGdvZduw"
+
+
+
+=====
+curl -i -X POST http://localhost:8001/services \
+  --data "name=my-test-service" \
+  --data "url=http://localhost"
+
+curl -i -X POST http://localhost:8001/services/my-test-service/routes \
+  --data "name=public-hello-route" \
+  --data "paths[]=/public/hello" \
+  --data "methods[]=GET"
+
+curl -i -X POST http://localhost:8001/services/my-test-service/routes \
+  --data "name=private-hello-route" \
+  --data "paths[]=/private/hello" \
+  --data "methods[]=GET"
+
+---
+curl -i http://localhost:8000/public/hello
+curl -i http://localhost:8000/private/hello
+curl -i http://localhost:8000/private/hello \
+  -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJubFlxSkZUNVRWbEY4MGJfVVRnVG5RYV84Unh5cTJ5aWxTcXZ6djRCOFo4In0.eyJleHAiOjE3NTUyNDI3NjksImlhdCI6MTc1NTI0MjQ2OSwianRpIjoiNDdiODEwOGQtYTAzZC00NjNmLWEzYTUtNTAxYTQ4NWViNTI5IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3JlYWxtcy9kZW1vIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6ImM3ZGFiZDM2LTVlM2ItNDIxZS05N2FjLTcwNjM1OGM2NDMyOCIsInR5cCI6IkJlYXJlciIsImF6cCI6InNwcmluZy1ib290LWFwcCIsInNlc3Npb25fc3RhdGUiOiJiNDU3MWYzNC1mNDRjLTQwZjItODIzOC03ZTM3Zjk5ZTc5MDgiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIi8qIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsImRlZmF1bHQtcm9sZXMtZGVtbyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwic2lkIjoiYjQ1NzFmMzQtZjQ0Yy00MGYyLTgyMzgtN2UzN2Y5OWU3OTA4IiwiZW1haWxfdmVyaWZpZWQiOnRydWUsIm5hbWUiOiJhIGEiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJ0ZXN0IiwiZ2l2ZW5fbmFtZSI6ImEiLCJmYW1pbHlfbmFtZSI6ImEiLCJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20ifQ.fM0zQUXm1MHyng-9Yx5EHaz0u7puzd_-GONPITqy2vIyvbh1-EXFFAGx-MAAT3-z3trn7qHyh7pNqv41l6_hlMt0VbgA3gWPc-x5jS6vd7aQFXg9TKFjN8XVdR1YLQrkvyv3CoAD_j3vNAcJ8VQKaTURME36cZsOMiSqLmFStR9jUUxrVvlmmTHuMhm7O6jiaFc14JXSeq-2bpAnbEzLf5SP3AblOPyOKRJuXGjdcBgggusLpld7QBTdoU0Bw8nirw7gMEZIAW0ONvIi2J79hcztt3pVS0UQ7xoT-VMw4wtL6GK9-TrjO0uhUiAsSzAEkI9va40ElAxapjl2kfYZTw"
+
+
+=======SETUP JWT FOR VERIFY JWT KEYCLOAK TOKEN=============
+  curl -i -X POST http://localhost:8001/consumers \
+      --data "username=http://localhost:8080/realms/demo"
+
+curl -i -X POST http://localhost:8001/consumers/http%3A%2F%2Flocalhost%3A8080%2Frealms%2Fdemo/jwt \
+    --data "algorithm=RS256" \
+	--data "key=http://localhost:8080/realms/demo" \
+    --data-urlencode "rsa_public_key=-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqd0iT5EaTucDgxLf26T+UrPu56c4J0bCamkhpFHFKUy/lb1qOKokVDmvnIGZOy32afz910hcgJ4yv9/sbG0hv8acHOpKSq7B9px97byj++Hv6ZHotT13OOKFG2yBdB7blKKP1hnJZHfiksCfDL0XBoEBMsBbf1dOExkH7cPgSlCvmaJZ/2Brrayq8rcwBomOxF6ydqvdY+qPlEh4n4LNcfRaK/U6TWpisnxKBXPU1bgXPHWtMNZ8goV5gYCHxp4Y0QyjM15QDKCmykDqoGtwoL6lwV73H4kGzzRBY9Kx8jqUsURPsRs4UzN9QExM1Zol41UN63ibrjCDdjq6I60PNQIDAQAB
+-----END PUBLIC KEY-----"
+
+curl -X POST http://localhost:8001/routes/d35287e5-5304-4bfa-875c-ad2e8b777cdd/plugins \
+    --data "name=jwt"
+  --data "config.key_claim_name=iss"
+
+  curl -i http://localhost:8000/public/hello \
+  -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJNZEhPMHF4VlppMkEtZ01qN1hMcloyOTZNOE0wOURxRHl5eXZEaUU0Z3A0In0.eyJleHAiOjE3NTUyODM0NTUsImlhdCI6MTc1NTI2NTQ1NSwianRpIjoiNzA5YzdhOWMtMWJmMC00YzBkLWEzMGItNjViOWE1MWM2ZTkwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3JlYWxtcy9kZW1vIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjlkYTI5YzdmLTU3MWMtNGQ5NS04MmUzLTAwMGFmODEwYTJkNSIsInR5cCI6IkJlYXJlciIsImF6cCI6InNwcmluZy1ib290LWFwcCIsInNlc3Npb25fc3RhdGUiOiJlNTZlZTc0MC02OTc5LTRjYjktOTA0ZS1kNWZhYjU4NTRmMDAiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJkZWZhdWx0LXJvbGVzLWRlbW8iLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsInNpZCI6ImU1NmVlNzQwLTY5NzktNGNiOS05MDRlLWQ1ZmFiNTg1NGYwMCIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYW1lIjoiYSBhIiwicHJlZmVycmVkX3VzZXJuYW1lIjoidGVzdCIsImdpdmVuX25hbWUiOiJhIiwiZmFtaWx5X25hbWUiOiJhIiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIn0.fgB1fM2mHAplOXopPdo0WA-MLC7pGta-rm8c7n8euxg_yOhQLCyizhMwXusEUeaGjCU8WPVRUa99OtcKocDeldZs1rXvgoWBrE7gLfcfPRiTRGcVemSXbQOjT30eeFQNzhARWeF4RqXkBPehk2QdCEHOYuEQ_ZUo7tMSpss-negM9P8kvniJVPPt3MhEoGcVACxTU82sBggRkmUMg_ifFIuxyLGtwHQI4MMfMyYWmi6NZpEMsJwc_zN29N6QCB9a9jTrN9fuK4Tx9CODVEdQBH_4biow8_W57SbAHxHJRcUuiO9yd7Epb5pvpmBCY6A5QKolGgHUqSV6uO2AP6vAbg"
+
+=====================00000000==================
+curl -X POST http://localhost/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "test",
+    "password": "123456"
+}'
+
+=======SETUP JWT FOR VERIFY JWT KEYCLOAK TOKEN=============
+  curl -i -X POST http://192.168.1.6:8001/consumers \
+      --data "username=keycloak-demo"
+
+curl -i -X POST http://localhost:8001/consumers/keycloak-demo/jwt \
+    --data "algorithm=RS256" \
+	--data "key=http://localhost:8080/realms/demo" \
+    --data-urlencode "rsa_public_key=-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqd0iT5EaTucDgxLf26T+UrPu56c4J0bCamkhpFHFKUy/lb1qOKokVDmvnIGZOy32afz910hcgJ4yv9/sbG0hv8acHOpKSq7B9px97byj++Hv6ZHotT13OOKFG2yBdB7blKKP1hnJZHfiksCfDL0XBoEBMsBbf1dOExkH7cPgSlCvmaJZ/2Brrayq8rcwBomOxF6ydqvdY+qPlEh4n4LNcfRaK/U6TWpisnxKBXPU1bgXPHWtMNZ8goV5gYCHxp4Y0QyjM15QDKCmykDqoGtwoL6lwV73H4kGzzRBY9Kx8jqUsURPsRs4UzN9QExM1Zol41UN63ibrjCDdjq6I60PNQIDAQAB
+-----END PUBLIC KEY-----"
+
+curl -X POST http://localhost:8001/routes/d35287e5-5304-4bfa-875c-ad2e8b777cdd/plugins \
+    --data "name=jwt" \
+  --data "config.key_claim_name=iss"
+
+
+===Introspect====-
+curl -X POST http://10.84.161.94:8080/realms/demo/protocol/openid-connect/token/introspect \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -u "spring-boot-app:2TNrpt68Go7GftGm1doWJBLCNcNZbMlk" \
+  -d "token=eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJNZEhPMHF4VlppMkEtZ01qN1hMcloyOTZNOE0wOURxRHl5eXZEaUU0Z3A0In0.eyJleHAiOjE3NTU2MTM2NjgsImlhdCI6MTc1NTU5NTY2OCwianRpIjoiYzUzZTg1OTgtZmI1YS00ZTg5LWI3YzctMjMxZmJmMmUyMzU1IiwiaXNzIjoiaHR0cDovLzEwLjg0LjE2MS45NDo4MDgwL3JlYWxtcy9kZW1vIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjlkYTI5YzdmLTU3MWMtNGQ5NS04MmUzLTAwMGFmODEwYTJkNSIsInR5cCI6IkJlYXJlciIsImF6cCI6InNwcmluZy1ib290LWFwcCIsInNlc3Npb25fc3RhdGUiOiI2Zjc3NGIwMC00NmU2LTQ2NTctYTAzNC02ODY2Yjg3YmExOGIiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIiJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJkZWZhdWx0LXJvbGVzLWRlbW8iLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsInNpZCI6IjZmNzc0YjAwLTQ2ZTYtNDY1Ny1hMDM0LTY4NjZiODdiYTE4YiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYW1lIjoiYSBhIiwicHJlZmVycmVkX3VzZXJuYW1lIjoidGVzdCIsImdpdmVuX25hbWUiOiJhIiwiZmFtaWx5X25hbWUiOiJhIiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIn0.Y2140CvndJVVRagq3gycvZY2_siLDWVfi_9tYOe86tyvva5c8gyiCHWqguTMXh-y3T3uVAzItFsPlACaK1Zwoz-J2FsE4eyxBOtQlbE3zrAElgDgBj5drN0e_tpgz2htaTl_qxeUpaNZvF0t4K8WxFb13booMx8oqvvz30GMAo5D5vrnq22Q-lLSSea1I_u1PLHhMNRCBXRIjit7732GKK3EWN_4YcHrHbdEG73gM35QZWrkmIOAlPT7CusdY4P09OE-JwTWfCudY28xJsPt-hpE2r7lKcO6y7_An7U6nZU6n17nUIhMWZ2uuygJNLmrQegRNonL9LLFst-AynBgsQ"
+
+curl  -X POST http://10.84.161.94:8080/realms/demo/protocol/openid-connect/logout \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "client_id=spring-boot-app" \
+  -d "client_secret=2TNrpt68Go7GftGm1doWJBLCNcNZbMlk" \
+  -d "refresh_token=eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI2ZDAyNTJkMC1lNzNiLTQwMTItOWIzNy01Njc1ODI5YThhZjgifQ.eyJleHAiOjE3NTU2OTg5NjIsImlhdCI6MTc1NTU5MDk2MiwianRpIjoiNGEzOWNhZTktZGRkNi00N2E0LTk3NWYtYmRhODQxMTQ3MTNmIiwiaXNzIjoiaHR0cDovLzEwLjg0LjE2MS45NDo4MDgwL3JlYWxtcy9kZW1vIiwiYXVkIjoiaHR0cDovLzEwLjg0LjE2MS45NDo4MDgwL3JlYWxtcy9kZW1vIiwic3ViIjoiOWRhMjljN2YtNTcxYy00ZDk1LTgyZTMtMDAwYWY4MTBhMmQ1IiwidHlwIjoiUmVmcmVzaCIsImF6cCI6InNwcmluZy1ib290LWFwcCIsInNlc3Npb25fc3RhdGUiOiIxODIwNzNhNC0wMDRlLTRlYmItYWJiYy00NzUwZDY3NmE0MzkiLCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJzaWQiOiIxODIwNzNhNC0wMDRlLTRlYmItYWJiYy00NzUwZDY3NmE0MzkifQ.qYCMrw2PpIa1M7N2ZvyKwFSLziIm2swBgeqT-L1Ea4dbtSI-MpqYkbcq7BkJpothsOqjEub7BIgR31u2max8Eg"
+
+====OIDC
+--JWT LOCAL ONLY ---
+curl -i -X POST http://localhost:8001/routes/d35287e5-5304-4bfa-875c-ad2e8b777cdd/plugins \
+  --data "name=oidc" \
+  --data "config.client_id=spring-boot-app" \
+  --data "config.client_secret=2TNrpt68Go7GftGm1doWJBLCNcNZbMlk" \
+  --data "config.discovery=http://10.84.161.94:8080/realms/demo/.well-known/openid-configuration" \
+  --data "config.realm=demo" \
+  --data "config.bearer_only=yes" \
+  --data "config.scope=openid" \
+  --data "config.ssl_verify=no"
+--JWT INTROSPECT ----
+curl -i -X POST http://localhost:8001/routes/d35287e5-5304-4bfa-875c-ad2e8b777cdd/plugins \
+  --data "name=oidc" \
+  --data "config.client_id=spring-boot-app" \
+  --data "config.client_secret=2TNrpt68Go7GftGm1doWJBLCNcNZbMlk" \
+  --data "config.discovery=http://10.84.161.94:8080/realms/demo/.well-known/openid-configuration" \
+  --data "config.introspection_endpoint=http://10.84.161.94:8080/realms/demo/protocol/openid-connect/token/introspect" \
+  --data "config.introspection_endpoint_auth_method=client_secret_post" \
+  --data "config.bearer_only=yes" \
+  --data "config.realm=demo" \
+  --data "config.ssl_verify=no" \
+  --data "config.scope=openid"
+
+
+  curl -i http://localhost:8000/public/hello \
+  -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJNZEhPMHF4VlppMkEtZ01qN1hMcloyOTZNOE0wOURxRHl5eXZEaUU0Z3A0In0.eyJleHAiOjE3NTU2MzEyMzEsImlhdCI6MTc1NTYxMzIzMSwianRpIjoiNTBlNmJmNzItNGYyYS00YWQ1LWE2NDYtMDhjZGJiMDIyYTkxIiwiaXNzIjoiaHR0cDovLzE5Mi4xNjguMS4xNTo4MDgwL3JlYWxtcy9kZW1vIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjlkYTI5YzdmLTU3MWMtNGQ5NS04MmUzLTAwMGFmODEwYTJkNSIsInR5cCI6IkJlYXJlciIsImF6cCI6InNwcmluZy1ib290LWFwcCIsInNlc3Npb25fc3RhdGUiOiI5ZTYxMGJhMy02MGFmLTQxZjQtYjM3MS0zZDI2MDU1YjZkY2YiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIiJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJkZWZhdWx0LXJvbGVzLWRlbW8iLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsInNpZCI6IjllNjEwYmEzLTYwYWYtNDFmNC1iMzcxLTNkMjYwNTViNmRjZiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYW1lIjoiYSBhIiwicHJlZmVycmVkX3VzZXJuYW1lIjoidGVzdCIsImdpdmVuX25hbWUiOiJhIiwiZmFtaWx5X25hbWUiOiJhIiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIn0.qT3QAhO36e8qmP67nSQbPC_ep7TKA2zr_eyB537NPRrmcs7omKkOSbe3LyQUhNxDx-2mwA-fesugqoN5V7dopJqKrRkhQH2YMwzdyZrQKn1P3iuglDG3DBkdA5iYKQsGggzvzi9vYee1t1nkt1ECXM1qia1JUYM8C_k84BDwh3SxczuQvM40GXgBHjaPqngUIJq7zNTDoluDSL54pxlDGqrZ1XsH5ZmILYzenXnHvGEVnowIlQA1yuTuzfFaQPr6ktOvQrwV6SSa2H-w4GsIBe085k6QnngQVT9GyQ-t185GpYQCV6A08rolaqoc4MRXfxNBqWGQiupsURF2GA3TFQ"

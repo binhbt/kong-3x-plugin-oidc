@@ -1,0 +1,16 @@
+server:
+  port: 80
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://192.168.1.15:8080/realms/demo
+keycloak:
+  url: http://localhost:8080
+  realm: demo
+  client-id: spring-boot-app
+  client-secret: 2TNrpt68Go7GftGm1doWJBLCNcNZbMlk
+  admin-username: admin
+  admin-password: admin
