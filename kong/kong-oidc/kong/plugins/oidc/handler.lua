@@ -86,16 +86,21 @@ function handle(oidcConfig)
   local response, err
   local has_bearer = utils.has_bearer_access_token()
 
-  if oidcConfig.bearer_only == "yes" and has_bearer then
+  if oidcConfig.bearer_only == "yes" then
+    if not has_bearer then
+        ngx.header["WWW-Authenticate"] = 'Bearer realm="' .. oidcConfig.realm .. '", error="missing_token"'
+        utils.exit(ngx.HTTP_UNAUTHORIZED, "missing_token", ngx.HTTP_UNAUTHORIZED)
+    end
+
     if oidcConfig.introspection_endpoint then
-      response, err = introspect(oidcConfig)
+        response, err = introspect(oidcConfig)
     else
-      response, err = require("resty.openidc").bearer_jwt_verify(oidcConfig)
+        response, err = require("resty.openidc").bearer_jwt_verify(oidcConfig)
     end
 
     if err or not response then
-      ngx.header["WWW-Authenticate"] = 'Bearer realm="' .. oidcConfig.realm .. '",error="' .. (err or "unauthorized") .. '"'
-      utils.exit(ngx.HTTP_UNAUTHORIZED, err or "unauthorized", ngx.HTTP_UNAUTHORIZED)
+        ngx.header["WWW-Authenticate"] = 'Bearer realm="' .. oidcConfig.realm .. '", error="' .. (err or "unauthorized") .. '"'
+        utils.exit(ngx.HTTP_UNAUTHORIZED, err or "unauthorized", ngx.HTTP_UNAUTHORIZED)
     end
   else
     response = make_oidc(oidcConfig)
